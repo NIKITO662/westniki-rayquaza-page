@@ -125,8 +125,10 @@ const Index = () => {
         </div>
 
         {/* Contact Form */}
-        <div className="mt-16 w-full flex flex-col items-center relative z-10">
-          <form onSubmit={handleSubmitForm} className="space-y-6 flex flex-col items-center w-full px-4">
+        <div className="mt-16 w-full max-w-lg flex flex-col items-center relative z-10">
+          <p className="mb-4 font-mono text-xs text-muted-foreground">send a message to the sky lord</p>
+          
+          <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col w-full">
             <input
               type="text"
               name="name"
@@ -134,8 +136,8 @@ const Index = () => {
               onChange={(e) => setName(e.target.value)}
               maxLength={32}
               required
-              placeholder="your name (max 32 chars)"
-              className="w-[280px] text-center rounded-full border border-[#1d4ed8] bg-[#232433] px-4 py-2 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none"
+              placeholder="your name"
+              className="w-full rounded border border-border bg-muted/50 px-4 py-2.5 font-mono text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 text-center"
             />
 
             <textarea
@@ -144,28 +146,28 @@ const Index = () => {
               onChange={(e) => setMessage(e.target.value)}
               maxLength={1024}
               required
-              placeholder="your message (max 1024 chars)"
+              placeholder="your message"
               rows={4}
-              className="w-full max-w-3xl text-center rounded-[2rem] border border-[#1d4ed8] bg-[#232433] px-6 py-10 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none resize-none"
+              className="w-full resize-none rounded border border-border bg-muted/50 px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 text-center"
             />
 
             <button
               type="submit"
               disabled={formStatus === "submitting"}
-              className="rounded-full border border-[#1d4ed8] bg-[#1e3a8a] px-8 py-1.5 text-sm text-[#93c5fd] transition-all hover:bg-[#1e40af] disabled:opacity-50"
+              className="w-full cursor-pointer rounded border border-border bg-muted/50 px-4 py-2.5 font-mono text-sm text-muted-foreground transition-colors hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {formStatus === "submitting" ? "Sending..." : "Send"}
+              {formStatus === "submitting" ? "sending..." : "submit message"}
             </button>
           </form>
 
           {/* Status Messages */}
           {formStatus === "submitted" && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-green-900 border border-green-700 px-4 py-1.5 text-xs font-bold text-green-300">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[120%] mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full border border-primary/30 bg-muted px-4 py-1.5 text-sm font-bold text-primary">
               message sent! i'll check it Soon™
             </div>
           )}
           {formStatus === "error" && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-red-900 border border-red-700 px-4 py-1.5 text-xs font-bold text-red-300">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[120%] mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full border border-red-500/30 bg-muted px-4 py-1.5 text-sm font-bold text-red-500">
               error sending message. please try again.
             </div>
           )}
