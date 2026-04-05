@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 25% 12%;
+    --foreground: 200 60% 75%;
+    --card: 220 25% 16%;
+    --card-foreground: 200 60% 75%;
+    --popover: 220 25% 16%;
+    --popover-foreground: 200 60% 75%;
+    --primary: 145 60% 45%;
+    --primary-foreground: 220 25% 12%;
+    --secondary: 50 80% 55%;
+    --secondary-foreground: 220 25% 12%;
+    --muted: 220 20% 20%;
+    --muted-foreground: 200 30% 55%;
+    --accent: 145 60% 45%;
+    --accent-foreground: 220 25% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 20% 25%;
+    --input: 220 20% 25%;
+    --ring: 145 60% 45%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    cursor: url('/rayquaza-cursor.png') 16 16, auto;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
