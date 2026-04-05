@@ -108,20 +108,17 @@ const Index = () => {
         </div>
 
         <div className="max-w-2xl space-y-4 text-center text-sm md:text-base">
-          {clicks > 15 ? (
+          {clicks > 15 && (
             <p className="animate-pulse font-bold text-red-500 text-foreground">
               OKAY STOP CLICKING ME I SWEAR TO GOD I WILL DESTROY THE HOENN REGION
             </p>
-          ) : (
-            <>
-              <p className="text-foreground">
-                currently under construction (more like, trying to come up with good ideas for what to do with this website)
-              </p>
-              <p className="text-foreground">
-                the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
-              </p>
-            </>
           )}
+          <p className="text-foreground">
+            currently under construction (more like, trying to come up with good ideas for what to do with this website)
+          </p>
+          <p className="text-foreground">
+            the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
+          </p>
           <p className="text-foreground">
             rayquaza is the best pokémon and i will not be taking any criticism on this matter 🐉
           </p>
