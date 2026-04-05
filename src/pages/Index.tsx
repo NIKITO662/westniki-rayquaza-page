@@ -1,7 +1,7 @@
 import { useState } from "react";
 import rayquaza from "@/assets/rayquaza.gif";
 import StarryBackground from "@/components/StarryBackground";
-import { Github, Link } from "lucide-react";
+import { Github, Link, Sparkles } from "lucide-react";
 
 const roarMessages = [
   "RAYYYYY! 🐉⚡",
@@ -20,6 +20,8 @@ const Index = () => {
   const [roar, setRoar] = useState<string | null>(null);
   const [clicks, setClicks] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [berries, setBerries] = useState(0);
+  const [isShiny, setIsShiny] = useState(false);
 
   const handleClick = () => {
     const newClicks = clicks + 1;
@@ -52,7 +54,7 @@ const Index = () => {
             </div>
           )}
           <img
-            src={rayquaza}
+            src={isShiny ? "https://files.catbox.moe/ar1fe3.gif" : rayquaza}
             alt="Rayquaza"
             width={300}
             height={300}
@@ -69,12 +71,20 @@ const Index = () => {
         </div>
 
         <div className="max-w-2xl space-y-4 text-center text-sm md:text-base">
-          <p className="text-foreground">
-            currently under construction (more like, trying to come up with good ideas for what to do with this website)
-          </p>
-          <p className="text-foreground">
-            the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
-          </p>
+          {clicks > 15 ? (
+            <p className="animate-pulse font-bold text-red-500 text-foreground">
+              OKAY STOP CLICKING ME I SWEAR TO GOD I WILL DESTROY THE HOENN REGION
+            </p>
+          ) : (
+            <>
+              <p className="text-foreground">
+                currently under construction (more like, trying to come up with good ideas for what to do with this website)
+              </p>
+              <p className="text-foreground">
+                the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
+              </p>
+            </>
+          )}
           <p className="text-foreground">
             rayquaza is the best pokémon and i will not be taking any criticism on this matter 🐉
           </p>
@@ -100,6 +110,13 @@ const Index = () => {
             <Github size={20} />
             <span>GitHub</span>
           </a>
+          <button
+            onClick={() => setIsShiny(!isShiny)}
+            className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+          >
+            <Sparkles size={20} />
+            <span>{isShiny ? "revert form" : "shiny mode"}</span>
+          </button>
         </div>
 
         {/* Retro visitor counter */}
@@ -107,8 +124,16 @@ const Index = () => {
           you are visitor #{Math.floor(Math.random() * 9000 + 1000).toLocaleString()} (totally real)
         </div>
 
+        {/* Berry feeder */}
+        <div
+          onClick={() => setBerries((b) => b + 1)}
+          className="mt-4 cursor-pointer rounded border border-border bg-muted/50 px-4 py-2 font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
+        >
+          feed a sitrus berry 🫐 (fed: {berries})
+        </div>
+
         <p className="mt-6 text-xs text-muted-foreground">
-          hosted on github as a joke btw
+          hosted on as a joke btw
         </p>
       </div>
     </div>
