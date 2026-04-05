@@ -1,5 +1,6 @@
 import { useState } from "react";
-import rayquaza from "@/assets/rayquaza.gif";
+import rayquaza from "@/assets/rayquaza.gif"; 
+import shinyMegaRayquaza from "@/assets/image_5.png"; 
 import StarryBackground from "@/components/StarryBackground";
 import { Github, Link, Sparkles } from "lucide-react";
 
@@ -23,6 +24,10 @@ const Index = () => {
   const [berries, setBerries] = useState(0);
   const [isShiny, setIsShiny] = useState(false);
 
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
+
   const handleClick = () => {
     const newClicks = clicks + 1;
     setClicks(newClicks);
@@ -38,11 +43,43 @@ const Index = () => {
     setTimeout(() => setRoar(null), 2000);
   };
 
+  const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormStatus("submitting");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xvzvdzdq", {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setFormStatus("submitted");
+        setName("");
+        setMessage("");
+        setTimeout(() => setFormStatus("idle"), 5000);
+      } else {
+        setFormStatus("error");
+        setTimeout(() => setFormStatus("idle"), 5000);
+      }
+    } catch (error) {
+      setFormStatus("error");
+      console.error("Form submission error:", error);
+      setTimeout(() => setFormStatus("idle"), 5000);
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
       <StarryBackground />
 
-      <div className="relative z-10 flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center w-full">
         <h1 className="mb-8 animate-fade-in text-4xl font-bold text-primary md:text-5xl">
           hey there.
         </h1>
@@ -90,8 +127,59 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Socials */}
-        <div className="mt-10 flex items-center gap-6">
+        {/* Contact Form */}
+        <div className="mt-16 w-full max-w-lg rounded-2xl border border-primary/20 bg-muted/30 p-8 shadow-inner relative z-10">
+          <form onSubmit={handleSubmitForm} className="space-y-6 flex flex-col items-center">
+            <div className="w-full relative">
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={32}
+                required
+                placeholder="your name (max 32 chars)"
+                className="w-full text-center rounded-full border border-primary/40 bg-muted/80 px-6 py-2.5 font-mono text-sm text-primary placeholder:text-primary/60 placeholder:text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
+              />
+            </div>
+
+            <div className="w-full relative">
+              <textarea
+                name="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                maxLength={1024}
+                required
+                placeholder="your message (max 1024 chars)"
+                rows={5}
+                className="w-full text-center rounded-2xl border border-primary/40 bg-muted/80 px-6 py-4 font-mono text-sm text-primary placeholder:text-primary/60 placeholder:text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={formStatus === "submitting"}
+              className="mt-6 rounded-full border-2 border-primary bg-primary px-10 py-2.5 text-sm font-bold text-black transition-all hover:bg-black hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {formStatus === "submitting" ? "Sending..." : "Send"}
+            </button>
+          </form>
+
+          {/* Status Messages */}
+          {formStatus === "submitted" && (
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-green-900 border border-green-700 px-4 py-1.5 text-xs font-bold text-green-300">
+              message sent! i'll check it Soon™
+            </div>
+          )}
+          {formStatus === "error" && (
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-red-900 border border-red-700 px-4 py-1.5 text-xs font-bold text-red-300">
+              error sending message. please try again.
+            </div>
+          )}
+        </div>
+
+        {/* Socials & Shiny Button */}
+        <div className="mt-16 flex items-center gap-6">
           <a
             href="https://guns.lol/ItsNiki"
             target="_blank"
@@ -132,7 +220,7 @@ const Index = () => {
           feed a sitrus berry 🫐 (fed: {berries})
         </div>
 
-        <p className="mt-6 text-xs text-muted-foreground">
+        <p className="mt-12 text-xs text-muted-foreground">
           hosted on as a joke btw
         </p>
       </div>
