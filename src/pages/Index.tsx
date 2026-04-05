@@ -160,10 +160,13 @@ const Index = () => {
             </p>
           )}
           <p className="text-foreground">
-            currently under construction (more like, trying to come up with good ideas for what to do with this website)
+            currently under construction (i made this site for 1 hour and now i'm trying to come up with good idea what to do!!!)
           </p>
           <p className="text-foreground">
             the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
+          </p>
+          <p className="text-foreground">
+            i made the site as a joke in 02:00 in the morning and i don't know what to do with this site but is cool site right I FREAKING LOVE RAYQUAZA 😍🐉
           </p>
           <p className="text-foreground">
             rayquaza is the best pokémon and i will not be taking any criticism on this matter 🐉
@@ -208,7 +211,7 @@ const Index = () => {
 
         {/* Contact Form */}
         <div className="mt-16 w-full max-w-lg flex flex-col items-center relative z-10">
-          <p className="mb-4 font-mono text-xs text-muted-foreground">send a message to the sky lord</p>
+          <p className="mb-4 font-mono text-xs text-muted-foreground">if you have any idea what to add to the site write a message : 3</p>
           
           <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col w-full">
             <input
@@ -291,6 +294,7 @@ const Index = () => {
 
         <p className="mt-12 text-xs text-muted-foreground">
           hosted as a joke btw
+          owner and creator of this cool website somewhereniki/WestNiki
         </p>
       </div>
     </div>
