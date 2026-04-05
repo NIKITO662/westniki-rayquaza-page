@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import rayquaza from "@/assets/rayquaza.gif"; 
 import shinyMegaRayquaza from "@/assets/image_5.png"; 
 import StarryBackground from "@/components/StarryBackground";
@@ -17,16 +17,51 @@ const roarMessages = [
   "hyper beam go BRRRRR 💥",
 ];
 
+// Types for the Lanyard Discord API
+interface LanyardData {
+  discord_user: {
+    id: string;
+    username: string;
+    display_name: string;
+    avatar: string;
+  };
+  discord_status: "online" | "idle" | "dnd" | "offline";
+  activities: { type: number; state: string; emoji?: { name: string; id: string; animated: boolean } }[];
+}
+
 const Index = () => {
   const [roar, setRoar] = useState<string | null>(null);
   const [clicks, setClicks] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [berries, setBerries] = useState(0);
   const [isShiny, setIsShiny] = useState(false);
 
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
+  const [discordData, setDiscordData] = useState<LanyardData | null>(null);
+
+  const DISCORD_ID = "1297495492019621929";
+
+  // Fetch Discord data on load and poll every 10 seconds
+  useEffect(() => {
+    const fetchDiscordData = async () => {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const json = await res.json();
+        if (json.success) {
+          setDiscordData(json.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch Discord data", error);
+      }
+    };
+
+    if (DISCORD_ID !== "YOUR_DISCORD_ID_HERE") {
+      fetchDiscordData();
+      const interval = setInterval(fetchDiscordData, 10000);
+      return () => clearInterval(interval);
+    }
+  }, []);
 
   const handleClick = () => {
     const newClicks = clicks + 1;
@@ -74,6 +109,19 @@ const Index = () => {
       setTimeout(() => setFormStatus("idle"), 5000);
     }
   };
+
+  // Helper function to color the Discord status dot
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case "online": return "bg-green-500";
+      case "idle": return "bg-yellow-500";
+      case "dnd": return "bg-red-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  // Find the custom status activity (type 4)
+  const customStatus = discordData?.activities.find((a) => a.type === 4);
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
@@ -124,11 +172,45 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Discord Profile Card */}
+        <div className="mt-12 w-full max-w-sm rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col relative z-10">
+          {discordData ? (
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <img
+                  src={`https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`}
+                  alt="Discord Avatar"
+                  className="w-16 h-16 rounded-full border-2 border-primary/30"
+                />
+                <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-[#232433] ${getStatusColor(discordData.discord_status)}`}></div>
+              </div>
+
+              <div className="flex flex-col text-left">
+                <span className="font-bold text-lg text-primary leading-tight">{discordData.discord_user.display_name}</span>
+                <span className="font-mono text-xs text-muted-foreground">@{discordData.discord_user.username}</span>
+
+                {customStatus && (
+                  <div className="mt-1.5 text-sm text-foreground flex items-center gap-1.5">
+                    {customStatus.emoji && customStatus.emoji.id ? (
+                      <img src={`https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${customStatus.emoji.animated ? 'gif' : 'png'}`} className="w-4 h-4" alt="emoji" />
+                    ) : customStatus.emoji ? (
+                      <span>{customStatus.emoji.name}</span>
+                    ) : null}
+                    <span>{customStatus.state}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center font-mono text-xs text-muted-foreground py-4">
+              {DISCORD_ID === "YOUR_DISCORD_ID_HERE" ? "Waiting for Discord ID..." : "Loading Discord Profile..."}
+            </div>
+          )}
+        </div>
+
         {/* Contact Form */}
-        <div className="mt-16 w-full max-w-lg flex flex-col items-center relative z-10">
-          <p className="mb-4 font-mono text-xs text-muted-foreground">send a message to the sky lord</p>
-          
-          <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col w-full">
+        <div className="mt-16 w-full flex flex-col items-center relative z-10">
+          <form onSubmit={handleSubmitForm} className="space-y-6 flex flex-col items-center w-full px-4">
             <input
               type="text"
               name="name"
@@ -136,8 +218,8 @@ const Index = () => {
               onChange={(e) => setName(e.target.value)}
               maxLength={32}
               required
-              placeholder="your name"
-              className="w-full rounded border border-border bg-muted/50 px-4 py-2.5 font-mono text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 text-center"
+              placeholder="your name (max 32 chars)"
+              className="w-[280px] text-center rounded-full border border-[#1d4ed8] bg-[#232433] px-4 py-2 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none"
             />
 
             <textarea
@@ -146,28 +228,28 @@ const Index = () => {
               onChange={(e) => setMessage(e.target.value)}
               maxLength={1024}
               required
-              placeholder="your message"
+              placeholder="your message (max 1024 chars)"
               rows={4}
-              className="w-full resize-none rounded border border-border bg-muted/50 px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 text-center"
+              className="w-full max-w-3xl text-center rounded-[2rem] border border-[#1d4ed8] bg-[#232433] px-6 py-10 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none resize-none"
             />
 
             <button
               type="submit"
               disabled={formStatus === "submitting"}
-              className="w-full cursor-pointer rounded border border-border bg-muted/50 px-4 py-2.5 font-mono text-sm text-muted-foreground transition-colors hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full border border-[#1d4ed8] bg-[#1e3a8a] px-8 py-1.5 text-sm text-[#93c5fd] transition-all hover:bg-[#1e40af] disabled:opacity-50"
             >
-              {formStatus === "submitting" ? "sending..." : "submit message"}
+              {formStatus === "submitting" ? "Sending..." : "Send"}
             </button>
           </form>
 
           {/* Status Messages */}
           {formStatus === "submitted" && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[120%] mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full border border-primary/30 bg-muted px-4 py-1.5 text-sm font-bold text-primary">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-green-900 border border-green-700 px-4 py-1.5 text-xs font-bold text-green-300">
               message sent! i'll check it Soon™
             </div>
           )}
           {formStatus === "error" && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[120%] mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full border border-red-500/30 bg-muted px-4 py-1.5 text-sm font-bold text-red-500">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 z-20 animate-fade-in whitespace-nowrap rounded-full bg-red-900 border border-red-700 px-4 py-1.5 text-xs font-bold text-red-300">
               error sending message. please try again.
             </div>
           )}
@@ -205,14 +287,6 @@ const Index = () => {
         {/* Retro visitor counter */}
         <div className="mt-8 rounded border border-border bg-muted/50 px-4 py-2 font-mono text-xs text-muted-foreground">
           you are visitor #{Math.floor(Math.random() * 9000 + 1000).toLocaleString()} (totally real)
-        </div>
-
-        {/* Berry feeder */}
-        <div
-          onClick={() => setBerries((b) => b + 1)}
-          className="mt-4 cursor-pointer rounded border border-border bg-muted/50 px-4 py-2 font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
-        >
-          feed a sitrus berry 🫐 (fed: {berries})
         </div>
 
         <p className="mt-12 text-xs text-muted-foreground">
