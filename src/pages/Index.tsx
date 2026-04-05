@@ -125,38 +125,34 @@ const Index = () => {
         </div>
 
         {/* Contact Form */}
-        <div className="mt-16 w-full max-w-lg rounded-2xl border border-primary/20 bg-muted/30 p-8 shadow-inner relative z-10">
-          <form onSubmit={handleSubmitForm} className="space-y-6 flex flex-col items-center">
-            <div className="w-full relative">
-              <input
-                type="text"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={32}
-                required
-                placeholder="your name (max 32 chars)"
-                className="w-full text-center rounded-full border border-primary/40 bg-muted/80 px-6 py-2.5 font-mono text-sm text-primary placeholder:text-primary/60 placeholder:text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
-              />
-            </div>
+        <div className="mt-16 w-full flex flex-col items-center relative z-10">
+          <form onSubmit={handleSubmitForm} className="space-y-6 flex flex-col items-center w-full px-4">
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={32}
+              required
+              placeholder="your name (max 32 chars)"
+              className="w-[280px] text-center rounded-full border border-[#1d4ed8] bg-[#232433] px-4 py-2 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none"
+            />
 
-            <div className="w-full relative">
-              <textarea
-                name="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={1024}
-                required
-                placeholder="your message (max 1024 chars)"
-                rows={5}
-                className="w-full text-center rounded-2xl border border-primary/40 bg-muted/80 px-6 py-4 font-mono text-sm text-primary placeholder:text-primary/60 placeholder:text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
-              />
-            </div>
+            <textarea
+              name="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              maxLength={1024}
+              required
+              placeholder="your message (max 1024 chars)"
+              rows={4}
+              className="w-full max-w-3xl text-center rounded-[2rem] border border-[#1d4ed8] bg-[#232433] px-6 py-10 font-mono text-sm text-[#60a5fa] placeholder:text-[#475569] outline-none resize-none"
+            />
 
             <button
               type="submit"
               disabled={formStatus === "submitting"}
-              className="mt-6 rounded-full border-2 border-primary bg-primary px-10 py-2.5 text-sm font-bold text-black transition-all hover:bg-black hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full border border-[#1d4ed8] bg-[#1e3a8a] px-8 py-1.5 text-sm text-[#93c5fd] transition-all hover:bg-[#1e40af] disabled:opacity-50"
             >
               {formStatus === "submitting" ? "Sending..." : "Send"}
             </button>
