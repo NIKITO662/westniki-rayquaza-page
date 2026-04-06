@@ -265,7 +265,7 @@ const Index = () => {
 
         {/* Contact Form */}
         <div className="mt-16 w-full max-w-lg flex flex-col items-center relative z-10">
-          <p className="mb-4 font-mono text-xs text-muted-foreground">send a message to the sky lord</p>
+          <p className="mb-4 font-mono text-xs text-muted-foreground">if you have any idea what to add to this site, send me a message : 3</p>
           
           <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col w-full">
             <input
