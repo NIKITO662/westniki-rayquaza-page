@@ -139,7 +139,7 @@ const Index = () => {
 
       <div className="relative z-10 flex flex-col items-center w-full">
         <h1 className="mb-8 animate-fade-in text-4xl font-bold text-primary md:text-5xl">
-          hey there.
+          hey ^_^
         </h1>
 
         <div className="relative mb-10">
@@ -172,10 +172,13 @@ const Index = () => {
             </p>
           )}
           <p className="text-foreground">
-            currently under construction (more like, trying to come up with good ideas for what to do with this website)
+            currently under construction (trying to come up with good idea for what to do with this site!!!)
           </p>
           <p className="text-foreground">
-            the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
+            the website will Soon™ at least some changes will appear. how soon? who fucking knows!!
+          </p>
+          <p className="text-foreground">
+            I made this site as a joke at 2:00 in the morning and I don't know what to do with it, but it's a cool site, right? I FREAKING LOVE RAYQUAZA 😍🐉
           </p>
           <p className="text-foreground">
             rayquaza is the best pokémon and i will not be taking any criticism on this matter 🐉
@@ -344,7 +347,7 @@ const Index = () => {
         </div>
 
         <p className="mt-12 text-xs text-muted-foreground">
-          hosted on as a joke btw
+          hosted as a joke btw owner and creator of this cool website somewhereniki/WestNiki --ME HEHEHE
         </p>
       </div>
     </div>
