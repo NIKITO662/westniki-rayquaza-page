@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import rayquaza from "@/assets/rayquaza.gif"; 
 import shinyMegaRayquaza from "@/assets/image_5.png"; 
 import StarryBackground from "@/components/StarryBackground";
-import { Github, Link, Sparkles } from "lucide-react";
+import { Github, Link, Sparkles, Trophy } from "lucide-react";
 
 const roarMessages = [
   "RAYYYYY! 🐉⚡",
@@ -46,6 +46,9 @@ const Index = () => {
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
   const [discordData, setDiscordData] = useState<LanyardData | null>(null);
 
+  // 1000 clicks easter egg state
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+
   const DISCORD_ID = "1297495492019621929";
   const MINECRAFT_USERNAME = "WestNiki"; 
   const MINECRAFT_UUID = "3220d4c1-8192-449e-8b0f-b52a8b686fce";
@@ -72,6 +75,14 @@ const Index = () => {
   const handleClick = () => {
     const newClicks = clicks + 1;
     setClicks(newClicks);
+
+    if (newClicks === 1000) {
+      setShowEasterEgg(true);
+      // Play Xbox Achievement Sound
+      const audio = new Audio("https://www.myinstants.com/media/sounds/xbox-achievement.mp3");
+      audio.play().catch((e) => console.error("Audio play failed:", e));
+      return; // Stop other animations
+    }
 
     if (newClicks % 10 === 0) {
       setIsSpinning(true);
@@ -136,6 +147,30 @@ const Index = () => {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
       <StarryBackground />
+
+      {/* 1000 Clicks Easter Egg Fullscreen Overlay */}
+      {showEasterEgg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
+          <img
+            src={isShiny ? "https://files.catbox.moe/ar1fe3.gif" : rayquaza}
+            alt="Full Screen Rayquaza"
+            className="h-full w-full object-contain animate-pulse"
+          />
+          
+          {/* Xbox Achievement Popup */}
+          <div className="fixed bottom-12 left-1/2 z-[60] flex w-full max-w-md -translate-x-1/2 animate-fade-in items-center gap-4 rounded-full border border-green-500/30 bg-[#1A1A1A] px-6 py-4 shadow-[0_0_30px_rgba(16,124,16,0.4)]">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#107C10]">
+              <Trophy className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-base font-bold text-white">Achievement unlocked</span>
+              <span className="text-xs text-gray-300">
+                Why did you have to click 1,000 times to get here to see an animated photo take your screen it's just a waste of time
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-col items-center w-full">
         <h1 className="mb-8 animate-fade-in text-4xl font-bold text-primary md:text-5xl">
@@ -346,7 +381,7 @@ const Index = () => {
           you are visitor #{Math.floor(Math.random() * 9000 + 1000).toLocaleString()} (totally real)
         </div>
 
-        <p className="mt-12 text-xs text-muted-foreground">
+        <p className="mt-12 text-xs text-muted-foreground text-center">
           hosted as a joke btw owner and creator of this cool website somewhereniki/WestNiki --ME HEHEHE
         </p>
       </div>
