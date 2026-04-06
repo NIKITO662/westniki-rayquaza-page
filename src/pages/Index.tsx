@@ -47,7 +47,8 @@ const Index = () => {
   const [discordData, setDiscordData] = useState<LanyardData | null>(null);
 
   const DISCORD_ID = "1297495492019621929";
-  const MINECRAFT_USERNAME = "WestNiki"; // <--- PUT YOUR MC NAME HERE
+  const MINECRAFT_USERNAME = "WestNiki"; 
+  const MINECRAFT_UUID = "3220d4c1-8192-449e-8b0f-b52a8b686fce";
 
   // Fetch Discord data on load and poll every 10 seconds
   useEffect(() => {
@@ -226,30 +227,36 @@ const Index = () => {
             )}
           </div>
 
-          {/* Minecraft 3D Skin Card - ONLY VISIBLE WHEN PLAYING MINECRAFT */}
-          {isPlayingMinecraft && (
-            <div className="w-full md:w-auto rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col items-center justify-center min-w-[160px]">
-              <img
-                src={`https://visage.surgeplay.com/full/256/${MINECRAFT_USERNAME}`}
-                alt="Minecraft Skin"
-                className="h-24 object-contain animate-float drop-shadow-[0_0_15px_hsl(145,60%,45%,0.2)]"
-              />
-              <span className="mt-4 font-mono text-xs text-muted-foreground text-center">
-                mc: {MINECRAFT_USERNAME}
+          {/* Minecraft 3D Skin Card - ALWAYS VISIBLE */}
+          <div className="w-full md:w-auto rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col items-center justify-center min-w-[160px]">
+            <img
+              src={`https://visage.surgeplay.com/full/256/${MINECRAFT_UUID}`}
+              alt="Minecraft Skin"
+              className="h-24 object-contain animate-float drop-shadow-[0_0_15px_hsl(145,60%,45%,0.2)]"
+            />
+            <span className="mt-4 font-mono text-xs text-muted-foreground text-center">
+              mc: {MINECRAFT_USERNAME}
+            </span>
+            
+            {isPlayingMinecraft ? (
+              <>
+                {playingActivity.details && (
+                  <span className="mt-1 font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
+                    {playingActivity.details}
+                  </span>
+                )}
+                {playingActivity.state && (
+                  <span className="font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
+                    {playingActivity.state}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="mt-1 font-mono text-[10px] text-muted-foreground/60 text-center">
+                offline
               </span>
-              {/* Shows the server IP and state (e.g. Hypixel, Bedwars) if Discord provides it */}
-              {playingActivity.details && (
-                <span className="mt-1 font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
-                  {playingActivity.details}
-                </span>
-              )}
-              {playingActivity.state && (
-                <span className="font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
-                  {playingActivity.state}
-                </span>
-              )}
-            </div>
-          )}
+            )}
+          </div>
 
         </div>
 
