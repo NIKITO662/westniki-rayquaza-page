@@ -26,7 +26,13 @@ interface LanyardData {
     avatar: string;
   };
   discord_status: "online" | "idle" | "dnd" | "offline";
-  activities: { type: number; state: string; emoji?: { name: string; id: string; animated: boolean } }[];
+  activities: { 
+    type: number; 
+    name: string; 
+    state?: string; 
+    details?: string; 
+    emoji?: { name: string; id: string; animated: boolean } 
+  }[];
 }
 
 const Index = () => {
@@ -41,6 +47,7 @@ const Index = () => {
   const [discordData, setDiscordData] = useState<LanyardData | null>(null);
 
   const DISCORD_ID = "1297495492019621929";
+  const MINECRAFT_USERNAME = "WestNiki"; // <--- PUT YOUR MC NAME HERE
 
   // Fetch Discord data on load and poll every 10 seconds
   useEffect(() => {
@@ -118,8 +125,12 @@ const Index = () => {
     }
   };
 
-  // Find the custom status activity (type 4)
+  // Find the custom status and any game currently being played
   const customStatus = discordData?.activities.find((a) => a.type === 4);
+  const playingActivity = discordData?.activities.find((a) => a.type === 0);
+  
+  // Check if the game being played is Minecraft
+  const isPlayingMinecraft = playingActivity?.name.toLowerCase().includes("minecraft");
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
@@ -127,7 +138,7 @@ const Index = () => {
 
       <div className="relative z-10 flex flex-col items-center w-full">
         <h1 className="mb-8 animate-fade-in text-4xl font-bold text-primary md:text-5xl">
-          hey ^_^.
+          hey there.
         </h1>
 
         <div className="relative mb-10">
@@ -160,58 +171,91 @@ const Index = () => {
             </p>
           )}
           <p className="text-foreground">
-            currently under construction (i made this site for 1 hour and now i'm trying to come up with good idea what to do!!!)
+            currently under construction (more like, trying to come up with good ideas for what to do with this website)
           </p>
           <p className="text-foreground">
             the website will Soon™ at least somewhat change in appearance. how soon? who fuckin knows!
-          </p>
-          <p className="text-foreground">
-            i made the site as a joke in 02:00 in the morning and i don't know what to do with this site but is cool site right I FREAKING LOVE RAYQUAZA 😍🐉
           </p>
           <p className="text-foreground">
             rayquaza is the best pokémon and i will not be taking any criticism on this matter 🐉
           </p>
         </div>
 
-        {/* Discord Profile Card */}
-        <div className="mt-12 w-full max-w-sm rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col relative z-10">
-          {discordData ? (
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <img
-                  src={`https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`}
-                  alt="Discord Avatar"
-                  className="w-16 h-16 rounded-full border-2 border-primary/30"
-                />
-                <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-[#232433] ${getStatusColor(discordData.discord_status)}`}></div>
-              </div>
+        {/* Profile Cards Container (Discord + Minecraft) */}
+        <div className="mt-12 flex flex-col md:flex-row items-stretch gap-6 relative z-10 w-full max-w-2xl justify-center">
+          
+          {/* Discord Profile Card */}
+          <div className="w-full md:w-auto flex-1 rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col">
+            {discordData ? (
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <img
+                    src={`https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`}
+                    alt="Discord Avatar"
+                    className="w-16 h-16 rounded-full border-2 border-primary/30"
+                  />
+                  <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-[#232433] ${getStatusColor(discordData.discord_status)}`}></div>
+                </div>
 
-              <div className="flex flex-col text-left">
-                <span className="font-bold text-lg text-primary leading-tight">{discordData.discord_user.display_name}</span>
-                <span className="font-mono text-xs text-muted-foreground">@{discordData.discord_user.username}</span>
+                <div className="flex flex-col text-left">
+                  <span className="font-bold text-lg text-primary leading-tight">{discordData.discord_user.display_name}</span>
+                  <span className="font-mono text-xs text-muted-foreground">@{discordData.discord_user.username}</span>
 
-                {customStatus && (
-                  <div className="mt-1.5 text-sm text-foreground flex items-center gap-1.5">
-                    {customStatus.emoji && customStatus.emoji.id ? (
-                      <img src={`https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${customStatus.emoji.animated ? 'gif' : 'png'}`} className="w-4 h-4" alt="emoji" />
-                    ) : customStatus.emoji ? (
-                      <span>{customStatus.emoji.name}</span>
-                    ) : null}
-                    <span>{customStatus.state}</span>
-                  </div>
-                )}
+                  {customStatus && (
+                    <div className="mt-1 text-sm text-foreground flex items-center gap-1.5">
+                      {customStatus.emoji && customStatus.emoji.id ? (
+                        <img src={`https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${customStatus.emoji.animated ? 'gif' : 'png'}`} className="w-4 h-4" alt="emoji" />
+                      ) : customStatus.emoji ? (
+                        <span>{customStatus.emoji.name}</span>
+                      ) : null}
+                      <span>{customStatus.state}</span>
+                    </div>
+                  )}
+
+                  {playingActivity && !isPlayingMinecraft && (
+                    <div className="mt-1 font-mono text-xs text-primary/80">
+                      playing: {playingActivity.name}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="text-center font-mono text-xs text-muted-foreground py-4">
-              Loading Discord Profile...
+            ) : (
+              <div className="text-center font-mono text-xs text-muted-foreground py-4 flex items-center justify-center h-full">
+                Loading Discord Profile...
+              </div>
+            )}
+          </div>
+
+          {/* Minecraft 3D Skin Card - ONLY VISIBLE WHEN PLAYING MINECRAFT */}
+          {isPlayingMinecraft && (
+            <div className="w-full md:w-auto rounded-2xl border border-primary/20 bg-muted/30 p-6 flex flex-col items-center justify-center min-w-[160px]">
+              <img
+                src={`https://visage.surgeplay.com/full/256/${MINECRAFT_USERNAME}`}
+                alt="Minecraft Skin"
+                className="h-24 object-contain animate-float drop-shadow-[0_0_15px_hsl(145,60%,45%,0.2)]"
+              />
+              <span className="mt-4 font-mono text-xs text-muted-foreground text-center">
+                mc: {MINECRAFT_USERNAME}
+              </span>
+              {/* Shows the server IP and state (e.g. Hypixel, Bedwars) if Discord provides it */}
+              {playingActivity.details && (
+                <span className="mt-1 font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
+                  {playingActivity.details}
+                </span>
+              )}
+              {playingActivity.state && (
+                <span className="font-mono text-[10px] text-primary/80 text-center max-w-[140px] truncate">
+                  {playingActivity.state}
+                </span>
+              )}
             </div>
           )}
+
         </div>
 
         {/* Contact Form */}
         <div className="mt-16 w-full max-w-lg flex flex-col items-center relative z-10">
-          <p className="mb-4 font-mono text-xs text-muted-foreground">if you have any idea what to add to the site write a message : 3</p>
+          <p className="mb-4 font-mono text-xs text-muted-foreground">send a message to the sky lord</p>
           
           <form onSubmit={handleSubmitForm} className="space-y-4 flex flex-col w-full">
             <input
@@ -293,8 +337,7 @@ const Index = () => {
         </div>
 
         <p className="mt-12 text-xs text-muted-foreground">
-          hosted as a joke btw
-          owner and creator of this cool website somewhereniki/WestNiki
+          hosted on as a joke btw
         </p>
       </div>
     </div>
